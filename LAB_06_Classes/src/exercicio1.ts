@@ -33,3 +33,9 @@ livro1.exibirDados();
 livro1.titulo = "Lenda dos guardioes"
 
 livro1.exibirDados();
+
+const livro2 = new Livro("Harry Potter",
+        "JK Rowling", 1998, "UK_Book"
+)
+
+livro2. exibirDados();
