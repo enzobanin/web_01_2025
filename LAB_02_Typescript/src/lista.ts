@@ -26,3 +26,5 @@ fruits.shift(); // Remove o primeiro elemento ("Uva")
 
 console.log(fruits[0]); // "Maçã"
 console.log(fruits.length); // 3
+
+console.log(fruits)

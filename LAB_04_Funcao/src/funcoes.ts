@@ -8,6 +8,10 @@ function hello():void{
     console.log("Hello World")
 }
 
+hello()
+
+console.log(hello())
+
 const hello1 = () => console.log("Hello World")
 
 console.log(message())
