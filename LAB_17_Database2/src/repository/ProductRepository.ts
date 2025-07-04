@@ -1,29 +1,21 @@
-import { exec } from "child_process";
 import { executarComandoSQL } from "../database/mysql";
 import { Product } from "../model/Product";
-import { resourceLimits } from "worker_threads";
 
 export class ProductRepository {
     private static instance : ProductRepository ;
-    private productList : Product [] = [];
 
-    private constructor () {
+    public constructor () {
         this.createTable();
     }
 
-    static getInstance():ProductRepository{
+    static getInstance(){
     if (!this.instance ){
-        this.instance = new ProductRepository () ;
+        this.instance = new ProductRepository();
     }
     return this.instance ;
     }
 
-    imprimeResult(err:any, result:any){
-        if(result!=undefined){
-            console.log("Dentro callback", result);
-        }
-    }
-    private async createTable(){
+    public async createTable(){
         const query = `CREATE TABLE IF NOT EXISTS Vendas.Product(
         id INT AUTO_INCREMENT PRIMARY KEY, 
         name VARCHAR(255) NOT NULL,
