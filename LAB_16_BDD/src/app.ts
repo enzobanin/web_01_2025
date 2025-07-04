@@ -1,13 +1,16 @@
-import express from "express"
-import { PessoaController } from "./controller/PessoaController"
+import express from "express";
+import { cadastrarProduto, pesquisarProdutoPorId,listaProdutos  } from "./controller/ProductController";
 
-const pessoaController = new PessoaController()
+const app = express();
+const PORT = process.env.PORT ??3000;
+app.use(express.json());
 
-const app = express()
+function logInfo(){
+    console.log(`API em execucao no URL: http:localhost:${PORT}`);
+}
 
-const PORT = process.env.PORT ?? 3000
-app.use(express.json())
+app.post("/api/product", cadastrarProduto);
+app.get("/api/product", pesquisarProdutoPorId);
+app.get("/api/products", listaProdutos);
 
-app.post("/api/pessoa", pessoaController.criarPessoa.bind(pessoaController))
-
-app.listen(PORT, () => console.log("Servidor rodando em http://localhost:3000"))
+app.listen(PORT, logInfo);

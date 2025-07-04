@@ -16,7 +16,7 @@ export function cadastrarProduto(req:Request, res:Response){
 
 export function pesquisarProdutoPorId(req:Request, res:Response){
     try{
-        const id = parseInt(req.params.id);
+        const id = parseInt(req.query.id as string);
         if(isNaN(id)){
             res.status(404).json({message:"ID invalido"});
             return;
