@@ -1,13 +1,17 @@
+import { exec } from "child_process";
 import { executarComandoSQL } from "../database/mysql";
 import { Product } from "../model/Product";
+import { resourceLimits } from "worker_threads";
 
 export class ProductRepository {
     private static instance : ProductRepository ;
     private productList : Product [] = [];
 
-    public constructor () {}
+    private constructor () {
+        this.createTable();
+    }
 
-    public static getInstance():ProductRepository{
+    static getInstance():ProductRepository{
     if (!this.instance ){
         this.instance = new ProductRepository () ;
     }
@@ -19,27 +23,26 @@ export class ProductRepository {
             console.log("Dentro callback", result);
         }
     }
-    createTable(){
+    private async createTable(){
+        const query = `CREATE TABLE IF NOT EXISTS Vendas.Product(
+        id INT AUTO_INCREMENT PRIMARY KEY, 
+        name VARCHAR(255) NOT NULL,
+        price DECIMAL(10,2)NOT NULL
+        )`;
         try{
-            const resultado = executarComandoSQL("CREATE TABLE IF NOT EXISTS Vendas.Product(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, price DECIMAL(10,2)NOT NULL)"
-                ,[],this.imprimeResult);
-                console.log('Query executada com sucesso', resultado)
+            const resultado = await executarComandoSQL(query, []);
+            console.log('Tabela Product criada com sucesso', resultado)
         }catch(err){
-            console.error('Erro ao executar a query', err);
+            console.error('Erro ao criar a tabela Product', err);
         }
     }
-    insertProduct(name:string, price:number){
-        try{
-            const resultado = executarComandoSQL(
-                "INSERT INTO vendas.Product (name,price) VALUES (?,?)",
-                [name, price], this.imprimeResult
-            );
-            console.log('Produto inserido com sucesso: ', resultado)
-        }catch(err){
-            console.error('Erro ao inserir o produto', err);
-            if(err instanceof Error)
-                throw err;
-        }
+    async insertProduct(name:string, price:number):Promise<Product>{
+       const resultado = await executarComandoSQL(
+        "INSERT INTO Vendas.Product (name, price) VALUES (?,?)",
+        [name, price] 
+       );
+       console.log('Produto inserido com sucesso:', resultado);
+       return new Product(resultado.insertId,name,price);
     }
 
 }
